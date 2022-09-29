@@ -1,6 +1,6 @@
 {
-  "name": "AVVLabelExtractor",
-  "short_name": "AVVLabelExtractor",
+  "name": "AVV Label Extractor",
+  "short_name": "AVV Label Extractor",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
