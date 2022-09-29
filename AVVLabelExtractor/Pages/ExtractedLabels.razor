@@ -1,0 +1,45 @@
+﻿@using AVV_Label_Extractor.Models
+@inject IJSRuntime JS
+@using System.IO
+
+<MudPaper Elevation="0">
+    <MudTreeView Items="TreeItems" MultiSelection="true" @bind-ActivatedValue="ActivatedValue" @bind-SelectedValues="SelectedValues">
+        <ItemTemplate>
+            <MudTreeViewItem @bind-Expanded="@context.IsExpanded" Items="@context.TreeItems" Value="@context"
+                             Icon="@context.Icon" Text="@context.Title" />
+        </ItemTemplate>
+    </MudTreeView>
+</MudPaper>
+
+<MudToolBar DisableGutters="true">
+    @if (TreeItems?.Count!=0) {
+        <MudButton OnClick="Download" Disabled="@(SelectedValues?.Count==0)" Color="Color.Secondary" Variant="Variant.Filled">Download .aup files</MudButton>
+    }    
+</MudToolBar>
+
+@code {
+    private TreeItemData? ActivatedValue { get; set; }
+
+    private HashSet<TreeItemData> SelectedValues { get; set; } = new HashSet<TreeItemData>();
+
+    [CascadingParameter]
+    public HashSet<TreeItemData>? TreeItems { get; set; }
+
+
+
+
+
+    public async void Download()
+    {
+        //Download the selected files
+        foreach (var item in SelectedValues)
+        {
+            //if we are at the top of a node. then s
+            if (item.TreeItems is not null) { continue; }
+            string fileName = item.Title.Trim() + ".aup";
+            string fileContent = item.FileContent.Declaration?.ToString() + System.Environment.NewLine + item.FileContent.ToString();
+            await JS.InvokeVoidAsync("downloadFileFromStream", fileName, "application/xml", fileContent);            
+        }
+    
+    }
+}

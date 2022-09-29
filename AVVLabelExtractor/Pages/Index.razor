@@ -1,0 +1,135 @@
+﻿@page "/"
+@using AVV_Label_Extractor.Models
+@using System.Xml
+@using System.Xml.Linq
+@using System.Net.Http.Headers
+
+@inject ISnackbar Snackbar
+
+<PageTitle>AVV Label Extractor</PageTitle>
+<MudText Typo="Typo.h3" GutterBottom="true">AVV Label Extractor</MudText>
+<MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Height="200px" Outlined="true" Class="@DragClass">
+    @if (!Clearing)
+    {
+    <InputFile OnChange="OnInputFileChanged" multiple class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" accept=".aup"/>
+    }
+    <MudText Typo="Typo.h6">Drag and drop the .aup files here or click to select it</MudText>
+    @foreach (var file in fileNames)
+    {
+        <MudChip Color="Color.Dark" Text="@file.Name" />
+    }
+</MudPaper>
+<MudToolBar DisableGutters="true" Class="gap-4">
+    <MudButton OnClick="ExtractLabels" Disabled="@(!fileNames.Any())" Color="Color.Primary" Variant="Variant.Filled">Extract Labels</MudButton>
+    <MudButton OnClick="Clear" Disabled="@(!fileNames.Any())" Color="Color.Error" Variant="Variant.Filled">Clear File List</MudButton>
+</MudToolBar>
+
+<CascadingValue Value="TreeItems">
+    <ExtractedLabels></ExtractedLabels>
+</CascadingValue>
+   
+
+@code {
+    private bool Clearing = false;
+    private static string DefaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full";
+    private string DragClass = DefaultDragClass;
+    private List<IBrowserFile> fileNames = new List<IBrowserFile>();
+
+
+    public HashSet<TreeItemData> TreeItems { get; set; } = new HashSet<TreeItemData>();
+
+    private void OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        ClearDragClass();
+        var files = e.GetMultipleFiles();
+        foreach (var file in files)
+        {
+            //Make sure is .aup files
+            if (file.Name.Contains(".aup")) {                
+                try
+                {
+                    fileNames.Add(file);
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(
+                        "{FileName} not uploaded (Err: 6): {Message}",
+                        file.Name, ex.Message);
+                }
+
+            }
+
+        }
+    }
+
+    private async Task Clear()
+    {
+        Clearing = true;
+        fileNames.Clear();
+        ClearDragClass();
+        TreeItems.Clear();
+        await Task.Delay(100);
+        Clearing = false;
+    }
+
+    private async void ExtractLabels()
+    {
+        TreeItems.Clear();
+        //Upload the files here
+        foreach (var file in fileNames)
+        {
+            try
+            {
+                //Let's set the document we are working on
+                var stream = file.OpenReadStream();
+
+                var doc = await XDocument.LoadAsync(stream, LoadOptions.None, CancellationToken.None);
+
+                //Let's get the labels from said document
+                var labeltracks = from l in doc.Descendants()
+                                  where l.Name.LocalName == "labeltrack"
+                                  select l.Attribute("name").Value;
+                //do we have any labels? if not then next element
+                if (labeltracks.Count() == 0) { continue; }
+                //Let's get the children
+                HashSet<TreeItemData> LabelTree = new HashSet<TreeItemData>(){};
+
+                foreach (var labeltrack in labeltracks)
+                {
+                    //Let's build the new aup file
+                    XDocument xdoc = new XDocument(doc);
+                    xdoc.Descendants().Where(x => x.Name.LocalName.Equals("tags") || x.Name.LocalName.Equals("wavetrack") || (x.Name.LocalName.Equals("labeltrack") && !x.Attribute("name").Value.Equals(labeltrack))).Remove();
+                    LabelTree.Add(new TreeItemData(labeltrack, Icons.Filled.Label, xdoc));
+                }
+                
+                TreeItems.Add(new TreeItemData(file.Name, Icons.Filled.Headphones)
+                {
+                        IsExpanded = true,
+                        TreeItems = LabelTree
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(
+                    "{FileName} not uploaded (Err: 6): {Message}",
+                    file.Name, ex.Message);
+            }
+        }
+
+        await Task.Delay(100);
+        base.StateHasChanged();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        Snackbar.Add("Processing Complete!", Severity.Normal);
+    }
+
+    private void SetDragClass()
+    {
+        DragClass = $"{DefaultDragClass} mud-border-primary";
+    }
+
+    private void ClearDragClass()
+    {
+        DragClass = DefaultDragClass;
+    }
+}
