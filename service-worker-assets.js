@@ -5,11 +5,11 @@
       "url": "downloadFileFromStream.js"
     },
     {
-      "hash": "sha256-8kNQh+LErZHx3sMz237BHWFasAGQ88EWakJrWWYOxTA=",
+      "hash": "sha256-AN1diDn1o684ktN3257UFDvp5ROn66n2TS0xgQah6IQ=",
       "url": "favicon.ico"
     },
     {
-      "hash": "sha256-r76pcMtyyaXewSEqDzqV64kkjsYdDUiWLB79Ai2DKHw=",
+      "hash": "sha256-t\/CjmA1teC4nZ4KjUKPsHd2D7P9tzSP5yI2vuvWkYps=",
       "url": "icon-512.png"
     },
     {
@@ -57,11 +57,11 @@
       "url": "_framework\/icudt.dat"
     },
     {
-      "hash": "sha256-2ipg2cxz6Xa9TQ0WBlDoKTJQ3EPWQX5o80+xRon\/otk=",
+      "hash": "sha256-gGJuL7LOlKin5zc8Edh1ulUQKh\/pjROTwpzGRHUIcw0=",
       "url": "_framework\/blazor.boot.json"
     },
     {
-      "hash": "sha256-QFeR7hVxtvKnX+eP\/cGQ9jCY0bHxM\/ZpO1v9mpXjRiI=",
+      "hash": "sha256-cdYtacIlbXU+pRX9TgxU7lFUYz177PMw6culodgMjB4=",
       "url": "_framework\/AVVLabelExtractor.dll"
     },
     {
@@ -237,5 +237,5 @@
       "url": "_content\/MudBlazor\/MudBlazor.min.js"
     }
   ],
-  "version": "x0PIW\/fP"
+  "version": "GYpYyj2e"
 };

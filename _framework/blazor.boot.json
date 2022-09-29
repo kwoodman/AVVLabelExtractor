@@ -7,7 +7,7 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "AVVLabelExtractor.dll": "sha256-QFeR7hVxtvKnX+eP\/cGQ9jCY0bHxM\/ZpO1v9mpXjRiI=",
+      "AVVLabelExtractor.dll": "sha256-cdYtacIlbXU+pRX9TgxU7lFUYz177PMw6culodgMjB4=",
       "Microsoft.AspNetCore.Components.dll": "sha256-zUVTgg3qGttPvq6jowq1ENSuVuiZE2utKB83yXjpPRU=",
       "Microsoft.AspNetCore.Components.Forms.dll": "sha256-kBvLuYcDFmfb1Bx\/LDpF3oVaXUJSkUu\/\/tVTYytXWtE=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-Ft5IAZXBITiv3ulnx7trCY5dXLboKr5U2ngMZRx64+4=",
