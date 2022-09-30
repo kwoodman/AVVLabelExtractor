@@ -8,6 +8,8 @@
 
 <PageTitle>AVV Label Extractor</PageTitle>
 <MudText Typo="Typo.h3" GutterBottom="true">AVV Label Extractor</MudText>
+<MudText Typo="Typo.body1">Make sure that your audio track and label track have the same name.</MudText>
+<MudText Typo="Typo.overline">No Information is uploaded or saved on any servers. All processing is done in your browser on your machine.</MudText>
 <MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Height="200px" Outlined="true" Class="@DragClass">
     @if (!Clearing)
     {
