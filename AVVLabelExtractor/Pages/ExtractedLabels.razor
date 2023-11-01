@@ -31,6 +31,7 @@
 
     public async void Download()
     {
+        int count = 0;
         //Download the selected files
         foreach (var item in SelectedValues)
         {
@@ -38,7 +39,14 @@
             if (item.TreeItems is not null) { continue; }
             string fileName = item.Title.Trim() + ".aup";
             string fileContent = item.FileContent?.Declaration?.ToString() + System.Environment.NewLine + item.FileContent?.ToString();
-            await JS.InvokeVoidAsync("downloadFileFromStream", fileName, "application/xml", fileContent);            
+            await JS.InvokeVoidAsync("downloadFileFromStream", fileName, "application/xml", fileContent);    
+               count++;
+               if (count==10)
+               {
+                   //max ten files at one. so just wait a second before we continue the download process
+                   count=0;
+                   System.Threading.Thread.Sleep(2000);
+               }
         }
     
     }
